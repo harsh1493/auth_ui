@@ -1,12 +1,15 @@
 import 'dart:async';
 
+import 'package:auth_ui/data/user_list.dart';
 import 'package:auth_ui/helperUI/auth_forms.dart';
 import 'package:auth_ui/helperUI/background_painter.dart';
 import 'package:auth_ui/helperUI/progress_bar.dart';
 import 'package:auth_ui/helper_functions/validations.dart';
+import 'package:auth_ui/models/user_credentials.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../home_page_ui.dart';
 
@@ -27,6 +30,7 @@ class _SignupUIState extends State<SignupUI>
   bool edited = false;
   bool loading = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void validate() {
     if (formKey.currentState.validate()) {
@@ -34,7 +38,22 @@ class _SignupUIState extends State<SignupUI>
       setState(() {
         loading = true;
       });
-      Navigator.pushNamed(context, HomePage.id);
+      var errorMessage = Provider.of<UserList>(context)
+          .addUser(email: _email.text, password: _password.text);
+      if (errorMessage == 'noError') {
+        print('22222222222222222$errorMessage');
+        Navigator.pushNamed(context, HomePage.id);
+      } else {
+        _scaffoldKey.currentState.showSnackBar(new SnackBar(
+          content: Text(
+            errorMessage,
+            textAlign: TextAlign.center,
+          ),
+          duration: Duration(milliseconds: 1000),
+        ));
+        print(errorMessage);
+      }
+
       Timer(Duration(milliseconds: 1000), () {
         setState(() {
           loading = false;
@@ -68,6 +87,7 @@ class _SignupUIState extends State<SignupUI>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       body: Builder(
         builder: (context) => DecoratedBox(

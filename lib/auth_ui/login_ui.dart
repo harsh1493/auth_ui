@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:auth_ui/data/user_list.dart';
 import 'package:auth_ui/helperUI/auth_forms.dart';
 import 'package:auth_ui/helperUI/background_painter.dart';
 import 'package:auth_ui/helperUI/progress_bar.dart';
@@ -6,6 +7,7 @@ import 'package:auth_ui/home_page_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class LoginUI extends StatefulWidget {
   static const String id = 'login_ui';
@@ -19,6 +21,7 @@ class _LoginUIState extends State<LoginUI> with SingleTickerProviderStateMixin {
   TextEditingController _password = new TextEditingController();
   bool loading = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   void validate() {
     if (formKey.currentState.validate()) {
@@ -26,12 +29,28 @@ class _LoginUIState extends State<LoginUI> with SingleTickerProviderStateMixin {
       setState(() {
         loading = true;
       });
-      Timer(Duration(milliseconds: 1000), () {
-        Navigator.pushNamed(context, HomePage.id);
+      var errorMessage = Provider.of<UserList>(context)
+          .signIn(email: _email.text, password: _password.text);
+      if (errorMessage == 'noError') {
+        Timer(Duration(milliseconds: 1000), () {
+          Navigator.pushNamed(context, HomePage.id);
+          setState(() {
+            loading = false;
+          });
+        });
+      } else {
+        print(errorMessage);
+        _scaffoldKey.currentState.showSnackBar(new SnackBar(
+          content: Text(
+            errorMessage,
+            textAlign: TextAlign.center,
+          ),
+          duration: Duration(milliseconds: 1000),
+        ));
         setState(() {
           loading = false;
         });
-      });
+      }
     } else {
       print('error');
     }
@@ -39,6 +58,10 @@ class _LoginUIState extends State<LoginUI> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
+    setState(() {
+      loading = false;
+    });
+
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 2));
 
@@ -50,6 +73,7 @@ class _LoginUIState extends State<LoginUI> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: true,
       body: Container(
         //constraints: BoxConstraints(maxWidth: 230.0, maxHeight: 25.0),
