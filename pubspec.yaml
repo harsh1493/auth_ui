@@ -1,0 +1,44 @@
+name: auth_ui
+description: A new Flutter application.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+
+  cupertino_icons: ^1.0.0
+  flare_flutter: ^2.0.6
+  dots_indicator: ^1.2.0
+  animations: ^1.1.2
+  font_awesome_flutter: ^8.10.0
+  intl: ^0.16.1
+  provider: ^4.3.2+2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+    - assets/whole/
+    - assets/
+    - assets/user_avatars/
+  fonts:
+      - family: Limelight
+        fonts:
+          - asset: fonts/Limelight-Regular.ttf
+          - asset: fonts/Norican-Regular.ttf
+          - asset: fonts/Pattaya-Regular.ttf
+
