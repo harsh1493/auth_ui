@@ -8,6 +8,8 @@ import 'package:auth_ui/helper_functions/validations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../home_page_ui.dart';
+
 class SignupUI extends StatefulWidget {
   static const String id = 'signup_ui';
   @override
@@ -32,6 +34,7 @@ class _SignupUIState extends State<SignupUI>
       setState(() {
         loading = true;
       });
+      Navigator.pushNamed(context, HomePage.id);
       Timer(Duration(milliseconds: 1000), () {
         setState(() {
           loading = false;

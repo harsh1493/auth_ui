@@ -94,11 +94,7 @@ class _OnboardingPageState extends State<OnboardingPage>
                         onTap: () {
                           print('skip');
                           setState(() {
-                            _selectedIndex = 0;
-                            _controller.reset();
-                            _controller.forward();
-                            controller2.reset();
-                            controller2.forward();
+                            Navigator.pushNamed(context, WelcomeUi.id);
                           });
                         },
                         child: Padding(
